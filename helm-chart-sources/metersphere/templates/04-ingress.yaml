@@ -1,0 +1,15 @@
+{{if ne .Values.metersphere.host "nill"}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: metersphere
+  namespace: {{.Values.metersphere.namespace}}
+spec:
+  rules:
+    - host: {{.Values.metersphere.host}}
+      http:
+        paths:
+          - backend:
+              serviceName: metersphere-server
+              servicePort: 8081
+{{ end }}

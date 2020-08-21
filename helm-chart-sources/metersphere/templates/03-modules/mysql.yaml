@@ -1,0 +1,76 @@
+{{ if not .Values.mysql.external }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: {{.Values.metersphere.namespace}}
+spec:
+  replicas: 1
+  serviceName: "metersphere-mysql"
+  selector:
+    matchLabels:
+      app: metersphere-mysql
+  template:
+    metadata:
+      labels:
+        app: metersphere-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: {{.Values.modules.imagePrefix}}{{.Values.modules.mysql.image}}:{{.Values.modules.mysql.imageTag}}
+          imagePullPolicy: {{.Values.modules.mysql.imagePullPolicy}}
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 0.1
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-root-password
+                  name: mysql-config
+          ports:
+            - name: tcp
+              containerPort: 3306
+          volumeMounts:
+            - mountPath: /etc/mysql/conf.d/my.cnf
+              name: opt-metersphere-config
+              subPath: my.cnf
+            - mountPath: /docker-entrypoint-initdb.d/init.sql
+              name: init-mysql
+              subPath: init.sql
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+              subPath: mysql
+      imagePullSecrets:
+        - name: {{.Values.modules.imagePullSecret}}
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: mysql-config
+          name: opt-metersphere-config
+        - configMap:
+            defaultMode: 420
+            name: mysql-config
+          name: init-mysql
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metersphere-mysql
+  namespace: {{.Values.metersphere.namespace}}
+  labels:
+    app: metersphere-mysql
+spec:
+  clusterIP: None
+  selector:
+    app: metersphere-mysql
+  ports:
+    - name: tcp
+      port: 3306
+      protocol: TCP
+{{end}}

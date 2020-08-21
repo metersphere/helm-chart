@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metersphere-server
+  namespace: {{.Values.metersphere.namespace}}
+spec:
+  replicas: {{.Values.modules.server.replicas}}
+  selector:
+    matchLabels:
+      app: metersphere-server
+  template:
+    metadata:
+      labels:
+        app: metersphere-server
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - metersphere-server
+              topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: wait-mysql
+          image: {{.Values.modules.imagePrefix}}{{.Values.modules.busybox.image}}:{{.Values.modules.busybox.imageTag}}
+          imagePullPolicy: {{.Values.modules.busybox.imagePullPolicy}}
+          command:
+            - sh
+            - -c
+            - |
+              set -ex
+              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
+              sleep 10
+      containers:
+        - name: metersphere-server
+          image: {{.Values.modules.imagePrefix}}{{.Values.modules.server.image}}:{{.Values.modules.imageTag}}
+          imagePullPolicy: {{.Values.modules.imagePullPolicy}}
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 300Mi
+              cpu: 0.1
+          ports:
+            - name: http
+              containerPort: 8081
+          volumeMounts:
+            - mountPath: /opt/metersphere/conf
+              name: opt-metersphere-config
+            - mountPath: /opt/metersphere/logs
+              name: metersphere-logs
+      {{if ne .Values.modules.imagePullSecret "nill"}}
+      imagePullSecrets:
+        - name: {{.Values.modules.imagePullSecret}}
+      {{ end }}
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: metersphere-config
+            items:
+            - key: metersphere.properties
+              path: metersphere.properties
+          name: opt-metersphere-config
+        - name: metersphere-logs
+          {{if eq .Values.storage.accessModes "ReadWriteMany"}}
+          persistentVolumeClaim:
+            claimName: metersphere-logs-pvc
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metersphere-server
+  namespace: {{.Values.metersphere.namespace}}
+  labels:
+    app: metersphere-server
+spec:
+  sessionAffinity: ClientIP
+  selector:
+    app: metersphere-server
+  ports:
+    - name: http
+      port: 8081
+      protocol: TCP

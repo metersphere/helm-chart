@@ -1,0 +1,43 @@
+metersphere:
+  namespace: ms
+  host: nill
+mysql:
+  external: false
+  host: metersphere-mysql
+  port: 3306
+  userName: root
+  pwd: Password123@mysql
+kafka:
+  host: 47.93.18.78
+  port: 31092
+  topic: JMETER_METRICS
+  logTopic: JMETER_LOGS
+storage:
+  storageClassName: alicloud-disk-efficiency
+  accessModes: ReadWriteOnce
+  logs:
+    capacity: 100Gi
+  mysql:
+    capacity: 200Gi
+modules:
+  imagePullSecret: nill
+  imagePullPolicy: Always
+  imagePrefix: registry.cn-qingdao.aliyuncs.com/metersphere/
+  imageTag: v1.1.2
+  server:
+    image: metersphere
+    replicas: 1
+  data-streaming:
+    image: ms-data-streaming
+    replicas: 1
+  mysql:
+    image: mysql
+    imageTag: 5.7.25
+    imagePullPolicy: IfNotPresent
+  jmeter:
+    image: jmeter-master
+    imageTag: 0.0.8
+  busybox:
+    image: busybox
+    imageTag: latest
+    imagePullPolicy: IfNotPresent
