@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   metersphere-chart:
   - apiVersion: v1
-    appVersion: 1.1.2
+    appVersion: 1.3.1
     created: "2020-08-21T15:25:11.364513+08:00"
     description: A Helm chart for deploying MeterSphere
     digest: 619adf4267a94c20f3fb521141bcd6367226012bcfbb0b2867ae1d04eb88e78d
@@ -15,6 +15,6 @@ entries:
     sources:
     - https://github.com/metersphere/installer
     urls:
-    - https://metersphere.github.io/helm-chart/metersphere-chart-1.1.2.tgz
-    version: 1.1.2
+    - https://metersphere.github.io/helm-chart/metersphere-chart-1.3.1.tgz
+    version: 1.3.1
 generated: "2020-08-21T15:25:11.363034+08:00"

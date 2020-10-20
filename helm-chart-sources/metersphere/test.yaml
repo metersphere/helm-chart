@@ -23,7 +23,7 @@ modules:
   imagePullSecret: nill
   imagePullPolicy: Always
   imagePrefix: registry.cn-qingdao.aliyuncs.com/metersphere/
-  imageTag: v1.1.2
+  imageTag: v1.3.1
   server:
     image: metersphere
     replicas: 1
@@ -36,7 +36,7 @@ modules:
     imagePullPolicy: IfNotPresent
   jmeter:
     image: jmeter-master
-    imageTag: 0.0.8
+    imageTag: 5.3-ms11
   busybox:
     image: busybox
     imageTag: latest
