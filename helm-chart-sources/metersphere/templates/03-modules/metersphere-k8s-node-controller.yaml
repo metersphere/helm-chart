@@ -4,7 +4,7 @@ metadata:
   name: metersphere-kubernetes-node-controller
   namespace: {{.Values.metersphere.namespace}}
 spec:
-  replicas: {{.Values.modules.server.replicas}}
+  replicas: {{.Values.modules.nodeController.replicas}}
   selector:
     matchLabels:
       app: metersphere-kubernetes-node-controller
@@ -27,7 +27,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: metersphere-kubernetes-node-controller
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.server.image}}:{{.Values.modules.imageTag}}
+          image: {{.Values.modules.imagePrefix}}{{.Values.modules.nodeController.image}}:{{.Values.modules.imageTag}}
           imagePullPolicy: {{.Values.modules.imagePullPolicy}}
           resources:
             limits:
