@@ -27,9 +27,6 @@ modules:
   server:
     image: metersphere
     replicas: 1
-  nodeController:
-    image: ms-kubernetes-node-controller
-    replicas: 1
   dataStreaming:
     enable: true
     image: ms-data-streaming
