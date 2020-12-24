@@ -1,13 +1,18 @@
+{{if .Values.server.enabled | default true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metersphere-server
-  namespace: {{.Values.metersphere.namespace}}
 spec:
-  replicas: {{.Values.modules.server.replicas}}
+  replicas: {{.Values.server.replicas | default 1}}
   selector:
     matchLabels:
       app: metersphere-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 100%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -27,19 +32,19 @@ spec:
               topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-mysql
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.busybox.image}}:{{.Values.modules.busybox.imageTag}}
-          imagePullPolicy: {{.Values.modules.busybox.imagePullPolicy}}
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
           command:
             - sh
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
+              until nc -zv {{ .Values.common.mysql.host }} {{ .Values.common.mysql.port }}; do sleep 5; done
               sleep 10
       containers:
         - name: metersphere-server
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.server.image}}:{{.Values.modules.imageTag}}
-          imagePullPolicy: {{.Values.modules.imagePullPolicy}}
+          image: {{.Values.common.imagePrefix}}{{.Values.server.image}}:{{.Values.common.imageTag}}
+          imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
               memory: 1Gi
@@ -54,9 +59,9 @@ spec:
               name: opt-metersphere-config
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
-      {{if ne .Values.modules.imagePullSecret "nill"}}
+      {{if ne (.Values.common.imagePullSecret | default "nil") "nil"}}
       imagePullSecrets:
-        - name: {{.Values.modules.imagePullSecret}}
+        - name: {{.Values.common.imagePullSecret}}
       {{ end }}
       volumes:
         - configMap:
@@ -67,7 +72,7 @@ spec:
               path: metersphere.properties
           name: opt-metersphere-config
         - name: metersphere-logs
-          {{if eq .Values.storage.accessModes "ReadWriteMany"}}
+          {{if .Values.logPersistence.enabled}}
           persistentVolumeClaim:
             claimName: metersphere-logs-pvc
           {{ else }}
@@ -78,7 +83,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: metersphere-server
-  namespace: {{.Values.metersphere.namespace}}
   labels:
     app: metersphere-server
 spec:
@@ -89,3 +93,4 @@ spec:
     - name: http
       port: 8081
       protocol: TCP
+{{end}}

@@ -1,11 +1,10 @@
-{{if .Values.modules.dataStreaming.enable}}
+{{if .Values.dataStreaming.enabled | default true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metersphere-data-streaming
-  namespace: {{.Values.metersphere.namespace}}
 spec:
-  replicas: {{.Values.modules.dataStreaming.replicas}}
+  replicas: {{.Values.dataStreaming.replicas | default 1}}
   selector:
     matchLabels:
       app: metersphere-data-streaming
@@ -28,29 +27,29 @@ spec:
               topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-mysql
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.busybox.image}}:{{.Values.modules.busybox.imageTag}}
-          imagePullPolicy: {{.Values.modules.busybox.imagePullPolicy}}
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
           command:
             - sh
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
+              until nc -zv {{ .Values.common.mysql.host }} {{ .Values.common.mysql.port }}; do sleep 5; done
               sleep 10
         - name: wait-kafka
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.busybox.image}}:{{.Values.modules.busybox.imageTag}}
-          imagePullPolicy: {{.Values.modules.busybox.imagePullPolicy}}
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
           command:
             - sh
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.kafka.host }} {{ .Values.kafka.port }}; do sleep 5; done
+              until nc -zv {{ .Values.common.kafka.host }} {{ .Values.common.kafka.port }}; do sleep 5; done
               sleep 10
       containers:
         - name: metersphere-data-streaming
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.dataStreaming.image}}:{{.Values.modules.imageTag}}
-          imagePullPolicy: {{.Values.modules.imagePullPolicy}}
+          image: {{.Values.common.imagePrefix}}{{.Values.dataStreaming.image}}:{{.Values.common.imageTag}}
+          imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
               memory: 1Gi
@@ -65,9 +64,9 @@ spec:
               name: opt-metersphere-config
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
-      {{if ne .Values.modules.imagePullSecret "nill"}}
+      {{if ne (.Values.common.imagePullSecret | default "nil") "nil"}}
       imagePullSecrets:
-        - name: {{.Values.modules.imagePullSecret}}
+        - name: {{.Values.common.imagePullSecret}}
       {{ end }}
       volumes:
         - configMap:
@@ -78,7 +77,7 @@ spec:
               path: metersphere.properties
           name: opt-metersphere-config
         - name: metersphere-logs
-          {{if eq .Values.storage.accessModes "ReadWriteMany"}}
+          {{if .Values.logPersistence.enabled}}
           persistentVolumeClaim:
             claimName: metersphere-logs-pvc
           {{ else }}
@@ -89,7 +88,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: metersphere-data-streaming
-  namespace: {{.Values.metersphere.namespace}}
   labels:
     app: metersphere-data-streaming
 spec:

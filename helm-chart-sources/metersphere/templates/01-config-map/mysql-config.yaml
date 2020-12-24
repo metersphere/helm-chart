@@ -1,8 +1,8 @@
+{{ if .Values.mysql.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-config
-  namespace: {{.Values.metersphere.namespace}}
 data:
   my.cnf: |
     [mysqld]
@@ -32,6 +32,6 @@ data:
 
     [mysql.server]
     default-character-set=utf8
-  mysql-root-password: {{ .Values.mysql.pwd }}
   init.sql: |
     CREATE DATABASE `metersphere` /*!40100 DEFAULT CHARACTER SET utf8 */;
+{{end}}

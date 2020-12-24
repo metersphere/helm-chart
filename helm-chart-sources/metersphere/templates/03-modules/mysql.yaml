@@ -1,9 +1,8 @@
-{{ if not .Values.mysql.external }}
+{{ if .Values.mysql.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
-  namespace: {{.Values.metersphere.namespace}}
 spec:
   replicas: 1
   serviceName: "metersphere-mysql"
@@ -17,18 +16,15 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: {{.Values.modules.imagePrefix}}{{.Values.modules.mysql.image}}:{{.Values.modules.mysql.imageTag}}
-          imagePullPolicy: {{.Values.modules.mysql.imagePullPolicy}}
+          image: {{.Values.common.imagePrefix}}{{.Values.mysql.image}}:{{.Values.mysql.imageTag}}
+          imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             requests:
               memory: 100Mi
               cpu: 0.1
           env:
             - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  key: mysql-root-password
-                  name: mysql-config
+              value: {{.Values.mysql.password}}
           ports:
             - name: tcp
               containerPort: 3306
@@ -42,8 +38,10 @@ spec:
             - mountPath: /var/lib/mysql
               name: mysql-data
               subPath: mysql
+      {{if ne (.Values.common.imagePullSecret | default "nil") "nil"}}
       imagePullSecrets:
-        - name: {{.Values.modules.imagePullSecret}}
+        - name: {{.Values.common.imagePullSecret}}
+      {{ end }}
       volumes:
         - configMap:
             defaultMode: 420
@@ -54,15 +52,18 @@ spec:
             name: mysql-config
           name: init-mysql
         - name: mysql-data
+          {{if .Values.mysql.persistence.enabled}}
           persistentVolumeClaim:
             claimName: mysql-data-pvc
-
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+          
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: metersphere-mysql
-  namespace: {{.Values.metersphere.namespace}}
   labels:
     app: metersphere-mysql
 spec:
