@@ -8,6 +8,6 @@ spec:
     - {{.Values.logPersistence.accessModes}}
   resources:
     requests:
-      storage: {{.Values.logPersistence.capacity}}
+      storage: {{.Values.logPersistence.size}}
   storageClassName: {{.Values.common.storageClass}}
 {{end}}
