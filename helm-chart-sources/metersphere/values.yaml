@@ -18,6 +18,7 @@ common:
     port: 9092
     metricTopic: JMETER_METRICS
     logTopic: JMETER_LOGS
+    testTopic: LOAD_TESTS
 
 server:
   enabled: true
@@ -35,6 +36,7 @@ server:
     kafka.topic={{.Values.common.kafka.metricTopic}}
     kafka.bootstrap-servers={{.Values.common.kafka.host}}.{{.Release.Namespace}}:{{.Values.common.kafka.port}}
     kafka.log.topic={{.Values.common.kafka.logTopic}}
+    kafka.test.topic={{.Values.common.kafka.testTopic}}
 
     ## JMETER
     jmeter.image={{ .Values.common.imagePrefix }}{{.Values.jmeter.image}}:{{.Values.jmeter.imageTag}}
@@ -58,6 +60,7 @@ dataStreaming:
     kafka.topic={{.Values.common.kafka.metricTopic}}
     kafka.bootstrap-servers={{.Values.common.kafka.host}}:{{.Values.common.kafka.port}}
     kafka.log.topic={{.Values.common.kafka.logTopic}}
+    kafka.test.topic={{.Values.common.kafka.testTopic}}
     jmeter.report.granularity=5000
 
 jmeter:
