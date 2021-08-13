@@ -1,12 +1,15 @@
+{{if or ( .Values.server.enabled ) ( .Values.dataStreaming.enabled ) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: metersphere-config
 data:
+{{if .Values.server.enabled | default true }}
   metersphere.properties: |-
     {{ tpl .Values.server.properties . | nindent 4 }}
-
+{{end}}
+{{if .Values.dataStreaming.enabled | default true }}
   data-streaming.properties: |-
     {{ tpl .Values.dataStreaming.properties . | nindent 4 }}
-
-
+{{end}}
+{{end}}
