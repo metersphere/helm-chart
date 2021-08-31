@@ -1,6 +1,7 @@
 ingress:
   enabled: true
   host: ms-dev.apps.metersphere.com
+  annotations: {}
   https:
     enabled: false
     secretName: ""
@@ -41,6 +42,9 @@ server:
     kafka.log.topic={{.Values.common.kafka.logTopic}}
     kafka.test.topic={{.Values.common.kafka.testTopic}}
 
+    ##修复启动报错，端口请注意自定义，下面只提供参考
+    tcp.mock.port = 9001
+
     ## JMETER
     jmeter.image={{ .Values.common.imagePrefix }}{{.Values.jmeter.image}}:{{.Values.jmeter.imageTag}}
     jmeter.pod.threads.limit=500
@@ -65,6 +69,8 @@ dataStreaming:
     kafka.log.topic={{.Values.common.kafka.logTopic}}
     kafka.test.topic={{.Values.common.kafka.testTopic}}
     jmeter.report.granularity=5000
+    ## 修复启动报错
+    kafka.report.topic = SERVER_REPORT 
 
 jmeter:
   image: jmeter-master

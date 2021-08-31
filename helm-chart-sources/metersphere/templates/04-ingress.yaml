@@ -1,7 +1,13 @@
 {{if .Values.ingress.enabled}}
-apiVersion: networking.k8s.io/v1beta1
+{{/* 添加ingress apiVerision判断 */}}
+apiVersion: {{ include "metersphere.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
+{{/* 增加注解参数 */}}
+{{- if .Values.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
   name: metersphere
 spec:
   rules:
@@ -18,3 +24,4 @@ spec:
       secretName: {{.Values.ingress.https.secretName}}
 {{ end }}      
 {{ end }}
+
