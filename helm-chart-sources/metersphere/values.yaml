@@ -6,7 +6,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: vsan
-  imageTag: v1.11.2
+  imageTag: v1.12.0
   imagePullPolicy: Always
   mysql: 
     host: metersphere-mysql
@@ -19,6 +19,7 @@ common:
     metricTopic: JMETER_METRICS
     logTopic: JMETER_LOGS
     testTopic: LOAD_TESTS
+    reportTopic: JMETER_REPORTS
 
 server:
   enabled: true
@@ -37,6 +38,7 @@ server:
     kafka.bootstrap-servers={{.Values.common.kafka.host}}.{{.Release.Namespace}}:{{.Values.common.kafka.port}}
     kafka.log.topic={{.Values.common.kafka.logTopic}}
     kafka.test.topic={{.Values.common.kafka.testTopic}}
+    kafka.report.topic={{.Values.common.kafka.reportTopic}}
 
     ## JMETER
     jmeter.image={{ .Values.common.imagePrefix }}{{.Values.jmeter.image}}:{{.Values.jmeter.imageTag}}
@@ -61,11 +63,12 @@ dataStreaming:
     kafka.bootstrap-servers={{.Values.common.kafka.host}}:{{.Values.common.kafka.port}}
     kafka.log.topic={{.Values.common.kafka.logTopic}}
     kafka.test.topic={{.Values.common.kafka.testTopic}}
+    kafka.report.topic={{.Values.common.kafka.reportTopic}}
     jmeter.report.granularity=5000
 
 jmeter:
   image: jmeter-master
-  imageTag: 5.3-ms14
+  imageTag: 5.4.1-ms8-jdk8
 
 logPersistence:
   enabled: false
