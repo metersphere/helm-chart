@@ -1,3 +1,0 @@
-Thanks for installing the MeterSphere.
-
-Default username/password for MeterSphere is admin/metersphere
