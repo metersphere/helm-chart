@@ -1,6 +1,9 @@
 ingress:
   enabled: true
   host: ms-dev.apps.metersphere.com
+  https:
+    enabled: false
+    secretName: ""
 
 common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
