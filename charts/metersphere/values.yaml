@@ -42,6 +42,7 @@ server:
     kafka.log.topic={{.Values.common.kafka.logTopic}}
     kafka.test.topic={{.Values.common.kafka.testTopic}}
     kafka.report.topic={{.Values.common.kafka.reportTopic}}
+    tcp.mock.port=10000
 
     ## JMETER
     jmeter.image={{ .Values.common.imagePrefix }}{{.Values.jmeter.image}}:{{.Values.jmeter.imageTag}}
