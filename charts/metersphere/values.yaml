@@ -1,6 +1,10 @@
 ingress:
   enabled: true
   host: ms-dev.apps.metersphere.com
+  annotations: {}
+    ## example for ingress annotions.
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"      
   https:
     enabled: false
     secretName: ""
