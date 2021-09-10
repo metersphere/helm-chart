@@ -1,4 +1,4 @@
-# helm-chart
+用于部署 [MeterSphere](https://github.com/metersphere/metersphere) 的 Helm Chart
 
 ## 使用指引
 
