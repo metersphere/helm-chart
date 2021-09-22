@@ -9,7 +9,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: vsan
-  imageTag: v1.12.3
+  imageTag: v1.13.0
   imagePullPolicy: Always
   mysql: 
     host: metersphere-mysql
@@ -75,15 +75,7 @@ nodeController:
   image: ms-node-controller
   replicas: 1
   properties: |-
-    ## KAFKA
-    kafka.partitions=1
-    kafka.replicas=1
-    kafka.topic={{.Values.common.kafka.metricTopic}}
-    kafka.bootstrap-servers={{.Values.common.kafka.host}}:{{.Values.common.kafka.port}}
-    kafka.log.topic={{.Values.common.kafka.logTopic}}
-    kafka.test.topic={{.Values.common.kafka.testTopic}}
-    kafka.report.topic={{.Values.common.kafka.reportTopic}}
-    jmeter.report.granularity=5000
+    ## TBD
 
 jmeter:
   image: jmeter-master
