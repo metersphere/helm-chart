@@ -48,6 +48,9 @@ server:
     jmeter.image={{ .Values.common.imagePrefix }}{{.Values.jmeter.image}}:{{.Values.jmeter.imageTag}}
     jmeter.pod.threads.limit=500
 
+    ## K8S
+    k8s.node-controller-image={{ .Values.common.imagePrefix }}{{.Values.nodeController.image}}:{{.Values.common.imageTag}}
+
     logger.sql.level=info
     
 dataStreaming:
