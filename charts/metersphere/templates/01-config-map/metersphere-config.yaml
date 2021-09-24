@@ -12,4 +12,8 @@ data:
   data-streaming.properties: |-
     {{ tpl .Values.dataStreaming.properties . | nindent 4 }}
 {{end}}
+{{if .Values.nodeController.enabled | default true }}
+  node-controller.properties: |-
+    {{ tpl .Values.nodeController.properties . | nindent 4 }}
+{{end}}
 {{end}}
