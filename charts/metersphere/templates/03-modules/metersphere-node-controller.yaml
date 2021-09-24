@@ -48,7 +48,7 @@ spec:
               cpu: 0.1
           ports:
             - name: http
-              containerPort: 8084
+              containerPort: 8082
           volumeMounts:
             - mountPath: /opt/metersphere/conf
               name: opt-metersphere-config
@@ -82,7 +82,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: metersphere-node-controller
+  name: ms-node-controller
   labels:
     app: metersphere-node-controller
 spec:
@@ -91,6 +91,6 @@ spec:
     app: metersphere-node-controller
   ports:
     - name: http
-      port: 8084
+      port: 8082
       protocol: TCP
 {{end}}
