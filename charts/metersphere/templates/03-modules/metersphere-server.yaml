@@ -59,9 +59,9 @@ spec:
               name: opt-metersphere-config
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
-      {{if ne (.Values.common.imagePullSecret | default "nil") "nil"}}
+      {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
       imagePullSecrets:
-        - name: {{.Values.common.imagePullSecret}}
+        - name: {{.Values.common.imagePullSecrets}}
       {{ end }}
       volumes:
         - configMap:

@@ -38,9 +38,9 @@ spec:
             - mountPath: /var/lib/mysql
               name: mysql-data
               subPath: mysql
-      {{if ne (.Values.common.imagePullSecret | default "nil") "nil"}}
+      {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
       imagePullSecrets:
-        - name: {{.Values.common.imagePullSecret}}
+        - name: {{.Values.common.imagePullSecrets}}
       {{ end }}
       volumes:
         - configMap:
