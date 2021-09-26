@@ -93,6 +93,11 @@ logPersistence:
   accessModes: ReadWriteOnce
   size: 10Gi
 
+dataPersistence:
+  enabled: true
+  accessModes: ReadWriteOnce
+  size: 10Gi
+
 mysql:
   enabled: true
   image: mysql

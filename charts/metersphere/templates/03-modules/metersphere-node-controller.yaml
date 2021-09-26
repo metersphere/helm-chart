@@ -54,6 +54,8 @@ spec:
               name: opt-metersphere-config
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
+            - mountPath: /opt/metersphere/data
+              name: metersphere-data              
             - mountPath: /var/run 
               name: docker-sock 
       {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
@@ -75,6 +77,13 @@ spec:
           {{ else }}
           emptyDir: {}
           {{ end }}
+        - name: metersphere-data
+          {{if .Values.dataPersistence.enabled}}
+          persistentVolumeClaim:
+            claimName: metersphere-data-pvc
+          {{ else }}
+          emptyDir: {}
+          {{ end }}          
         - name: docker-sock 
           hostPath: 
             path: /var/run 
