@@ -5,9 +5,21 @@ metadata:
   name: metersphere-data-pvc
 spec:
   accessModes:
-    - {{.Values.logPersistence.accessModes}}
+    - {{.Values.dataPersistence.accessModes}}
   resources:
     requests:
-      storage: {{.Values.logPersistence.size}}
+      storage: {{.Values.dataPersistence.size}}
+  storageClassName: {{.Values.common.storageClass}}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: node-controller-data-pvc
+spec:
+  accessModes:
+    - {{.Values.dataPersistence.accessModes}}
+  resources:
+    requests:
+      storage: {{.Values.dataPersistence.size}}
   storageClassName: {{.Values.common.storageClass}}
 {{end}}
