@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metersphere-scripts
+data:
+{{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
+  get-kafka-external.sh: |-
+    #!/bin/bash
+
+    kafka_pods=$(kubectl get pod --namespace chart-test -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=metersphere,app.kubernetes.io/component=kafka" -o jsonpath='{.items[*].metadata.name}')
+    bootstrap_servers=""
+    delim=""
+    for i in ${kafka_pods};do
+        host_ip=$(kubectl get pod/${i} --namespace chart-test -o jsonpath='{.status.hostIP}')
+        node_port=$(kubectl get svc --namespace chart-test -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=metersphere,app.kubernetes.io/component=kafka,pod=${i}" -o jsonpath='{.items[*].spec.ports[0].nodePort}')
+        bootstrap_servers=${bootstrap_servers}${delim}${host_ip}:${node_port}
+        delim=","
+    done
+    kubectl patch configmap/metersphere-config -n {{ .Release.Namespace }} -p "{\"data\":{\"kafka.bootstrap-servers\":\"${bootstrap_servers}\"}}"
+{{end}}
