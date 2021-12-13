@@ -3,6 +3,22 @@ entries:
   metersphere:
   - apiVersion: v1
     appVersion: 1.13.0
+    created: "2021-12-13T01:51:34.805427918Z"
+    description: A Helm chart to deploy MeterSphere
+    digest: 0cb85743b3cceefd25d36ce70bc2009baec3d65496929f892247622821dd956c
+    home: https://metersphere.io
+    icon: https://metersphere.io/images/logo/favicon.ico
+    maintainers:
+    - email: metersphere@fit2cloud.com
+      name: metersphere
+    name: metersphere
+    sources:
+    - https://github.com/metersphere/
+    urls:
+    - https://github.com/metersphere/helm-chart/releases/download/metersphere-1.0.6/metersphere-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
+    appVersion: 1.13.0
     created: "2021-09-24T09:44:45.404748775Z"
     description: A Helm chart to deploy MeterSphere
     digest: 88c2fa29db126866cd8ce832756379c3849296c3c19cf2a748a58049155674d6
