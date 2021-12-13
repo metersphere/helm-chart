@@ -154,5 +154,8 @@ kafka:
       registry: registry.cn-qingdao.aliyuncs.com/metersphere
       repository: zookeeper
       tag: 3.7.0
+  extraEnvVars:
+    - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
+      value: true
 zookeeper:
   enabled: true
