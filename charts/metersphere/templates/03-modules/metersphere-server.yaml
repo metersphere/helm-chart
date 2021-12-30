@@ -43,25 +43,6 @@ spec:
               until nc -zv {{ .Values.common.mysql.host }} {{ .Values.common.mysql.port }}; do sleep 5; done
               sleep 10
         {{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
-        - name: wait-kafka
-          image: busybox:latest
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: KAFKA_BOOTSTRAP-SERVERS
-              valueFrom:
-                configMapKeyRef:
-                  name: metersphere-config
-                  key: kafka.bootstrap-servers      
-          command:
-            - bash
-            - -c
-            - |
-              set -ex
-              for i in ${KAFKA_BOOTSTRAP-SERVERS//,/ };do
-                until nc -zv ${i%:*} ${i#*:};do sleep 5;done
-                echo "Kafka bootstrap $i is OK now."
-                sleep 5
-              done
         - name: get-kafka-external
           image: docker.io/bitnami/kubectl:1.19.15-debian-10-r3
           command:
@@ -69,7 +50,26 @@ spec:
           volumeMounts:
             - name: scripts
               mountPath: /scripts/get-kafka-external.sh
-              subPath: get-kafka-external.sh
+              subPath: get-kafka-external.sh        
+        - name: wait-kafka
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: metersphere-config
+                  key: kafka.bootstrap-servers      
+          command:
+            - sh
+            - -c
+            - |
+              set -ex
+              for i in ${KAFKA_BOOTSTRAP_SERVERS//,/ };do
+                until nc -zv ${i%:*} ${i#*:};do sleep 5;done
+                echo "Kafka bootstrap $i is OK now."
+                sleep 5
+              done
         {{ end }}
       containers:
         - name: metersphere-server

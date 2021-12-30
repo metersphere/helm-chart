@@ -15,3 +15,4 @@ data:
   node-controller.properties: |-
     {{ tpl .Values.nodeController.properties . | nindent 4 }}
 {{end}}
+  kafka.bootstrap-servers: ""
