@@ -51,7 +51,7 @@ spec:
               containerPort: 8082
           env: 
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
-              value: true
+              value: "true"
           volumeMounts:
             - mountPath: /opt/metersphere/conf
               name: opt-metersphere-config
