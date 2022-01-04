@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "charts\metersphere\Chart.yaml"
+      - "charts/metersphere/Chart.yaml"
   workflow_dispatch:
   
 
