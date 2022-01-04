@@ -75,12 +75,6 @@ spec:
         - name: metersphere-server
           image: {{.Values.common.imagePrefix}}{{.Values.server.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
-          env:
-            - name: KAFKA_BOOTSTRAP-SERVERS
-              valueFrom:
-                configMapKeyRef:
-                  name: metersphere-config
-                  key: kafka.bootstrap-servers
           resources:
             limits:
               memory: 1Gi
@@ -93,6 +87,11 @@ spec:
           env: 
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
+            - name: KAFKA_BOOTSTRAP-SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: metersphere-config
+                  key: kafka.bootstrap-servers
           volumeMounts:
             - mountPath: /opt/metersphere/conf
               name: opt-metersphere-config
