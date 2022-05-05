@@ -1,0 +1,71 @@
+{{ if .Values.redis.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  serviceName: "metersphere-redis"
+  selector:
+    matchLabels:
+      app: metersphere-redis
+  template:
+    metadata:
+      labels:
+        app: metersphere-redis
+    spec:
+      containers:
+        - name: redis
+          image: {{.Values.common.imagePrefix}}{{.Values.redis.image}}:{{.Values.redis.imageTag}}
+          imagePullPolicy: {{.Values.common.imagePullPolicy}}
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 0.1
+          ports:
+            - name: tcp
+              containerPort: 6379
+          env:
+            - name: MS_REDIS_PASSWORD
+              value: {{.Values.common.redis.password}}
+          command: ["redis-server", "/etc/redis/redis.conf", "--requirepass", "$(MS_REDIS_PASSWORD)"]
+          volumeMounts:
+            - mountPath: /etc/redis/redis.conf
+              name: opt-metersphere-config
+              subPath: redis.conf
+            - mountPath: /data
+              name: redis-data
+              subPath: redis
+      {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
+      imagePullSecrets:
+        - name: {{.Values.common.imagePullSecrets}}
+      {{ end }}
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: redis-config
+          name: opt-metersphere-config
+        - name: redis-data
+          {{if .Values.redis.persistence.enabled}}
+          persistentVolumeClaim:
+            claimName: redis-data-pvc
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metersphere-redis
+  labels:
+    app: metersphere-redis
+spec:
+  clusterIP: None
+  selector:
+    app: metersphere-redis
+  ports:
+    - name: tcp
+      port: 6379
+      protocol: TCP
+{{end}}

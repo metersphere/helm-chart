@@ -20,6 +20,11 @@ common:
     port: 3306
     username: root
     password: Password123@mysql
+  redis:
+    host: metersphere-redis
+    port: 6379
+    password: Password123@redis
+    database: 1
   kafka:
     host: metersphere-kafka 
     port: 9092
@@ -37,6 +42,13 @@ server:
     spring.datasource.url=jdbc:mysql://{{.Values.common.mysql.host}}:{{.Values.common.mysql.port}}/metersphere?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
     spring.datasource.username={{.Values.common.mysql.username}}
     spring.datasource.password={{.Values.common.mysql.password}}
+    
+    ## redis
+    spring.session.store-type=redis
+    spring.redis.host={{.Values.common.redis.host}}
+    spring.redis.port={{.Values.common.redis.port}}
+    spring.redis.database={{.Values.common.redis.database}}
+    spring.redis.password={{.Values.common.redis.password}}
 
     ## KAFKA
     kafka.partitions=1
@@ -107,6 +119,15 @@ mysql:
     enabled: true
     accessModes: ReadWriteOnce
     size: 20Gi
+redis:
+  enabled: true
+  image: redis
+  imageTag: "6.2.6"
+  password: Password123@redis
+  persistence:
+    enabled: true
+    accessModes: ReadWriteOnce
+    size: 10Gi
 kafka:
   enabled: true
   image:
