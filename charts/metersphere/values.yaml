@@ -13,7 +13,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v1.20.0-lts
+  imageTag: v1.20.1-lts
   imagePullPolicy: Always
   mysql: 
     host: metersphere-mysql
