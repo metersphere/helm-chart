@@ -130,10 +130,6 @@ redis:
     size: 10Gi
 kafka:
   enabled: true
-  image:
-    registry: registry.cn-qingdao.aliyuncs.com/metersphere
-    repository: kafka
-    tag: 3.2.0
   fullnameOverride: metersphere-kafka
   persistence:
     enabled: false
@@ -171,10 +167,6 @@ kafka:
     persistence:
       enabled: false
     fullnameOverride: metersphere-zookeeper
-    image:
-      registry: registry.cn-qingdao.aliyuncs.com/metersphere
-      repository: zookeeper
-      tag: 3.7.0
   extraEnvVars:
     - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
       value: "true"
