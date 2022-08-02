@@ -13,7 +13,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v1.20.4-lts
+  imageTag: v2.0.0
   imagePullPolicy: Always
   mysql: 
     host: metersphere-mysql
@@ -133,7 +133,7 @@ kafka:
   image:
     registry: registry.cn-qingdao.aliyuncs.com/metersphere
     repository: kafka
-    tag: 2.8.1
+    tag: 3.2.0
   fullnameOverride: metersphere-kafka
   persistence:
     enabled: false
