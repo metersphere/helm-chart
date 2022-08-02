@@ -113,7 +113,7 @@ dataPersistence:
 mysql:
   enabled: true
   image: mysql
-  imageTag: "5.7.25"
+  imageTag: "8.0.28"
   password: Password123@mysql
   persistence:
     enabled: true
