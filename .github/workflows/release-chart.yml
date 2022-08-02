@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - master
+      - v1.20
     paths:
       - "charts/metersphere/Chart.yaml"
   workflow_dispatch:
