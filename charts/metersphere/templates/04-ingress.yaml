@@ -12,7 +12,9 @@ spec:
     - host: {{.Values.ingress.host}}
       http:
         paths:
-          - backend:
+          - path: /
+            pathType: Prefix
+            backend:
               service:
                 name: metersphere-server
                 port:
