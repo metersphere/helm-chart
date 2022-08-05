@@ -4,9 +4,5 @@
 {{- end -}}
 {{/* Get Ingress API Version */}}
 {{- define "metersphere.ingress.apiVersion" -}}
-  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" -}}
     {{- print "networking.k8s.io/v1" -}}
-  {{- else -}}
-    {{- print "extensions/v1beta1" -}}
-  {{- end -}}
 {{- end -}}
