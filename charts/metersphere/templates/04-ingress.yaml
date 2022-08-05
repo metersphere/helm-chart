@@ -13,12 +13,14 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: metersphere-server
-              servicePort: 8081
+              service:
+                name: metersphere-server
+                port:
+                  number: 8081
 {{if .Values.ingress.https.enabled}}
   tls:
     - hosts:
         - {{.Values.ingress.host}}
       secretName: {{.Values.ingress.https.secretName}}
-{{ end }}      
+{{ end }}
 {{ end }}
