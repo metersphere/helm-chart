@@ -1,8 +1,37 @@
-{{/* Allow KubeVersion to be overridden. */}}
+{{/*
+Return the target Kubernetes version
+*/}}
 {{- define "metersphere.kubeVersion" -}}
-  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- if .Values.global }}
+    {{- if .Values.global.kubeVersion }}
+    {{- .Values.global.kubeVersion -}}
+    {{- else }}
+    {{- default .Capabilities.KubeVersion.Version .Values.kubeVersion -}}
+    {{- end -}}
+{{- else }}
+{{- default .Capabilities.KubeVersion.Version .Values.kubeVersion -}}
 {{- end -}}
-{{/* Get Ingress API Version */}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for ingress.
+*/}}
 {{- define "metersphere.ingress.apiVersion" -}}
-    {{- print "networking.k8s.io/v1" -}}
+{{- if .Values.ingress -}}
+{{- if .Values.ingress.apiVersion -}}
+{{- .Values.ingress.apiVersion -}}
+{{- else if semverCompare "<1.14-0" (include "metersphere.kubeVersion" .) -}}
+{{- print "extensions/v1beta1" -}}
+{{- else if semverCompare "<1.19-0" (include "metersphere.kubeVersion" .) -}}
+{{- print "networking.k8s.io/v1beta1" -}}
+{{- else -}}
+{{- print "networking.k8s.io/v1" -}}
+{{- end }}
+{{- else if semverCompare "<1.14-0" (include "metersphere.kubeVersion" .) -}}
+{{- print "extensions/v1beta1" -}}
+{{- else if semverCompare "<1.19-0" (include "metersphere.kubeVersion" .) -}}
+{{- print "networking.k8s.io/v1beta1" -}}
+{{- else -}}
+{{- print "networking.k8s.io/v1" -}}
+{{- end -}}
 {{- end -}}
