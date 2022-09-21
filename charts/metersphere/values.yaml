@@ -54,7 +54,7 @@ server:
     kafka.partitions=1
     kafka.replicas=1
     kafka.topic={{.Values.common.kafka.metricTopic}}
-    kafka.bootstrap-servers={{.Values.common.kafka.host}}.{{.Release.Namespace}}:{{.Values.common.kafka.port}}
+    kafka.bootstrap-servers={{.Values.common.kafka.host}}:{{.Values.common.kafka.port}}
     kafka.log.topic={{.Values.common.kafka.logTopic}}
     kafka.test.topic={{.Values.common.kafka.testTopic}}
     kafka.report.topic={{.Values.common.kafka.reportTopic}}

@@ -2,3 +2,4 @@
 .DS_Store
 charts/metersphere/charts/
 requirements.lock
+charts/metersphere/Chart.lock
