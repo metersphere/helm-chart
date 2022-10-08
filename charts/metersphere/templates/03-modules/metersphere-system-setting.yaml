@@ -1,13 +1,13 @@
-{{if .Values.server.enabled }}
+{{if .Values.systemSetting.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metersphere-server
+  name: metersphere-system-setting
 spec:
-  replicas: {{.Values.server.replicas | default 1}}
+  replicas: {{.Values.systemSetting.replicas | default 1}}
   selector:
     matchLabels:
-      app: metersphere-server
+      app: metersphere-system-setting
   strategy:
     rollingUpdate:
       maxSurge: 100%
@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       labels:
-        app: metersphere-server
+        app: metersphere-system-setting
     spec:
       affinity:
         podAntiAffinity:
@@ -28,7 +28,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - metersphere-server
+                  - metersphere-system-setting
               topologyKey: kubernetes.io/hostname
       serviceAccountName: metersphere
       initContainers:
@@ -40,7 +40,7 @@ spec:
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.common.mysql.host }} {{ .Values.common.mysql.port }}; do sleep 5; done
+              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
               sleep 10
         {{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
         - name: get-kafka-external
@@ -59,7 +59,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: metersphere-config
-                  key: kafka.bootstrap-servers      
+                  key: kafka.bootstrap-servers
           command:
             - sh
             - -c
@@ -72,18 +72,18 @@ spec:
               done
         {{ end }}
       containers:
-        - name: metersphere-server
-          image: {{.Values.common.imagePrefix}}{{.Values.server.image}}:{{.Values.common.imageTag}}
+        - name: metersphere-system-setting
+          image: {{.Values.common.imagePrefix}}{{.Values.systemSetting.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
-              memory: 1Gi
+              memory: 512Mi
             requests:
               memory: 300Mi
               cpu: 0.1
           ports:
             - name: http
-              containerPort: 8081
+              containerPort: 8001
           env: 
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
@@ -133,15 +133,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: metersphere-server
+  name: metersphere-system-setting
   labels:
-    app: metersphere-server
+    app: metersphere-system-setting
 spec:
   sessionAffinity: ClientIP
   selector:
-    app: metersphere-server
+    app: metersphere-system-setting
   ports:
     - name: http
-      port: 8081
+      port: 8001
       protocol: TCP
 {{end}}

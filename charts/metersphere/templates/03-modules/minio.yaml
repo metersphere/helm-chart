@@ -1,0 +1,74 @@
+{{ if .Values.minio.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  replicas: 1
+  serviceName: "metersphere-minio"
+  selector:
+    matchLabels:
+      app: metersphere-minio
+  template:
+    metadata:
+      labels:
+        app: metersphere-minio
+    spec:
+      containers:
+        - name: minio
+          image: {{.Values.common.imagePrefix}}{{.Values.minio.image}}:{{.Values.minio.imageTag}}
+          imagePullPolicy: {{.Values.common.imagePullPolicy}}
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 0.1
+          env:
+            - name: MINIO_ACCESS_KEY
+              value: {{.Values.minio.username}}
+            - name: MINIO_SECRET_KEY
+              value: {{.Values.minio.password}}
+          args:
+            - server
+            - --console-address
+            - ':9001'
+            - /data
+          ports:
+            - name: tcp
+              containerPort: 9000
+            - name: console
+              containerPort: 9001
+          volumeMounts:
+            - mountPath: /data
+              name: minio-data
+      {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
+      imagePullSecrets:
+        - name: {{.Values.common.imagePullSecrets}}
+      {{ end }}
+      volumes:
+        - name: minio-data
+          {{if .Values.minio.persistence.enabled}}
+          persistentVolumeClaim:
+            claimName: minio-data-pvc
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metersphere-minio
+  labels:
+    app: metersphere-minio
+spec:
+  clusterIP: None
+  selector:
+    app: metersphere-minio
+  ports:
+    - name: tcp
+      port: 9000
+      protocol: TCP
+    - name: console
+      port: 9001
+      protocol: TCP
+{{end}}

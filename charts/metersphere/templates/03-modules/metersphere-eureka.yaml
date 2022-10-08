@@ -1,17 +1,22 @@
-{{if .Values.nodeController.enabled }}
+{{if .Values.eureka.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metersphere-node-controller
+  name: metersphere-eureka
 spec:
-  replicas: {{.Values.nodeController.replicas | default 1}}
+  replicas: {{.Values.eureka.replicas | default 1}}
   selector:
     matchLabels:
-      app: metersphere-node-controller
+      app: metersphere-eureka
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 100%
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        app: metersphere-node-controller
+        app: metersphere-eureka
     spec:
       affinity:
         podAntiAffinity:
@@ -23,22 +28,12 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - metersphere-node-controller
+                  - metersphere-eureka
               topologyKey: kubernetes.io/hostname
-      initContainers:
-        - name: wait-kafka
-          image: busybox:latest
-          imagePullPolicy: IfNotPresent
-          command:
-            - sh
-            - -c
-            - |
-              set -ex
-              until nc -zv {{ .Values.kafka.host }} {{ .Values.kafka.port }}; do sleep 5; done
-              sleep 10
+      serviceAccountName: metersphere
       containers:
-        - name: metersphere-node-controller
-          image: {{.Values.common.imagePrefix}}{{.Values.nodeController.image}}:{{.Values.common.imageTag}}
+        - name: metersphere-eureka
+          image: {{.Values.common.imagePrefix}}{{.Values.eureka.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
@@ -48,7 +43,7 @@ spec:
               cpu: 0.1
           ports:
             - name: http
-              containerPort: 8082
+              containerPort: 8761
           env: 
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
@@ -58,9 +53,7 @@ spec:
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
             - mountPath: /opt/metersphere/data
-              name: node-controller-data              
-            - mountPath: /var/run 
-              name: docker-sock 
+              name: metersphere-data
       {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
       imagePullSecrets:
         - name: {{.Values.common.imagePullSecrets}}
@@ -70,7 +63,7 @@ spec:
             defaultMode: 420
             name: metersphere-config
             items:
-            - key: node-controller.properties
+            - key: metersphere.properties
               path: metersphere.properties
           name: opt-metersphere-config
         - name: metersphere-logs
@@ -80,29 +73,30 @@ spec:
           {{ else }}
           emptyDir: {}
           {{ end }}
-        - name: node-controller-data
+        - name: metersphere-data
           {{if .Values.dataPersistence.enabled}}
           persistentVolumeClaim:
-            claimName: node-controller-data-pvc
+            claimName: metersphere-data-pvc
           {{ else }}
           emptyDir: {}
-          {{ end }}          
-        - name: docker-sock 
-          hostPath: 
-            path: /var/run 
+          {{ end }}
+        - name: scripts
+          configMap:
+            name: metersphere-scripts
+            defaultMode: 0755
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ms-node-controller
+  name: metersphere-eureka
   labels:
-    app: metersphere-node-controller
+    app: metersphere-eureka
 spec:
   sessionAffinity: ClientIP
   selector:
-    app: metersphere-node-controller
+    app: metersphere-eureka
   ports:
     - name: http
-      port: 8082
+      port: 8761
       protocol: TCP
 {{end}}

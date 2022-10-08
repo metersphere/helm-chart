@@ -34,7 +34,7 @@ spec:
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.common.mysql.host }} {{ .Values.common.mysql.port }}; do sleep 5; done
+              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
               sleep 10
         - name: wait-kafka
           image: busybox:latest
@@ -44,7 +44,7 @@ spec:
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.common.kafka.host }} {{ .Values.common.kafka.port }}; do sleep 5; done
+              until nc -zv {{ .Values.kafka.host }} {{ .Values.kafka.port }}; do sleep 5; done
               sleep 10
       containers:
         - name: metersphere-data-streaming
@@ -52,7 +52,7 @@ spec:
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
-              memory: 1Gi
+              memory: 512Mi
             requests:
               memory: 300Mi
               cpu: 0.1

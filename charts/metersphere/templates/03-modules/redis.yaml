@@ -27,7 +27,7 @@ spec:
               containerPort: 6379
           env:
             - name: MS_REDIS_PASSWORD
-              value: {{.Values.common.redis.password}}
+              value: {{.Values.redis.password}}
           command: ["redis-server", "/etc/redis/redis.conf", "--requirepass", "$(MS_REDIS_PASSWORD)"]
           volumeMounts:
             - mountPath: /etc/redis/redis.conf
