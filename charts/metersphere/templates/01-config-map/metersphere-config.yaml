@@ -5,7 +5,7 @@ metadata:
 data:
 {{if .Values.systemSetting.enabled | default true }}
   metersphere.properties: |-
-    {{ tpl .Values.systemSetting.properties . | nindent 4 }}
+    {{ tpl .Values.common.properties . | nindent 4 }}
 {{end}}
 {{if .Values.dataStreaming.enabled | default true }}
   data-streaming.properties: |-
