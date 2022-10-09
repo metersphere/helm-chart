@@ -347,6 +347,11 @@ dataStreaming:
     kafka.report.topic={{.Values.kafka.reportTopic}}
     jmeter.report.granularity=5000
 
+    ## minio
+    minio.endpoint=http://{{.Values.minio.host}}:{{.Values.minio.port}}
+    minio.access-key={{.Values.minio.username}}
+    minio.secret-key={{.Values.minio.password}}
+
 nodeController:
   enabled: true
   image: node-controller
