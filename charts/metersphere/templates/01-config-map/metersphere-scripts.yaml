@@ -7,12 +7,12 @@ data:
   get-kafka-external.sh: |-
     #!/bin/bash
 
-    kafka_pods=$(kubectl get pod --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=metersphere,app.kubernetes.io/component=kafka" -o jsonpath='{.items[*].metadata.name}')
+    kafka_pods=$(kubectl get pod --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component=kafka" -o jsonpath='{.items[*].metadata.name}')
     bootstrap_servers=""
     delim=""
     for i in ${kafka_pods};do
         host_ip=$(kubectl get pod/${i} --namespace {{ .Release.Namespace }} -o jsonpath='{.status.hostIP}')
-        node_port=$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=metersphere,app.kubernetes.io/component=kafka,pod=${i}" -o jsonpath='{.items[*].spec.ports[0].nodePort}')
+        node_port=$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component=kafka,pod=${i}" -o jsonpath='{.items[*].spec.ports[0].nodePort}')
         bootstrap_servers=${bootstrap_servers}${delim}${host_ip}:${node_port}
         delim=","
     done
