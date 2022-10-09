@@ -20,7 +20,7 @@ spec:
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             requests:
-              memory: 100Mi
+              memory: 300Mi
               cpu: 0.1
           env:
             - name: MYSQL_ROOT_PASSWORD
