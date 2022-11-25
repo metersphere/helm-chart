@@ -30,7 +30,6 @@ spec:
                   values:
                   - metersphere-project-management
               topologyKey: kubernetes.io/hostname
-      serviceAccountName: metersphere
       initContainers:
         - name: wait-mysql
           image: busybox:latest
@@ -80,6 +79,7 @@ spec:
               set -ex
               until nc -zv metersphere-system-setting 8001; do sleep 5; done
               sleep 10
+      serviceAccountName: metersphere
         {{ end }}
       containers:
         - name: metersphere-project-management
@@ -97,11 +97,13 @@ spec:
           env: 
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
+            {{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
             - name: KAFKA_BOOTSTRAP-SERVERS
               valueFrom:
                 configMapKeyRef:
                   name: metersphere-config
                   key: kafka.bootstrap-servers
+            {{ end }}               
           volumeMounts:
             - mountPath: /opt/metersphere/conf
               name: opt-metersphere-config
