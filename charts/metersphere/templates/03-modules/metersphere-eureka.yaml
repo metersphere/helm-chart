@@ -30,7 +30,6 @@ spec:
                   values:
                   - metersphere-eureka
               topologyKey: kubernetes.io/hostname
-      serviceAccountName: metersphere
       containers:
         - name: metersphere-eureka
           image: {{.Values.common.imagePrefix}}{{.Values.eureka.image}}:{{.Values.common.imageTag}}
