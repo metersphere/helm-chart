@@ -13,7 +13,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v2.3.0
+  imageTag: v2.4.0
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
@@ -122,6 +122,16 @@ dataStreaming:
     minio.access-key={{.Values.minio.username}}
     minio.secret-key={{.Values.minio.password}}
 
+uiTest:
+  enabled: false
+  image: ui-test
+  replicas: 1
+
+workstation:
+  enabled: false
+  image: workstation
+  replicas: 1
+
 nodeController:
   enabled: true
   image: node-controller
@@ -131,7 +141,7 @@ nodeController:
 
 jmeter:
   image: jmeter-master
-  imageTag: 5.4.3-ms5-jdk11
+  imageTag: 5.5-ms2-jdk11
 
 logPersistence:
   enabled: true

@@ -1,0 +1,159 @@
+{{if .Values.uiTest.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metersphere-ui-test
+spec:
+  replicas: {{.Values.uiTest.replicas | default 1}}
+  selector:
+    matchLabels:
+      app: metersphere-ui-test
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 100%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: metersphere-ui-test
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - metersphere-ui-test
+              topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: wait-mysql
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              set -ex
+              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
+              sleep 10
+        {{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
+        - name: get-kafka-external
+          image: docker.io/bitnami/kubectl:1.19.15-debian-10-r3
+          command:
+            - /scripts/get-kafka-external.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts/get-kafka-external.sh
+              subPath: get-kafka-external.sh        
+        - name: wait-kafka
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: metersphere-config
+                  key: kafka.bootstrap-servers
+          command:
+            - sh
+            - -c
+            - |
+              set -ex
+              for i in ${KAFKA_BOOTSTRAP_SERVERS//,/ };do
+                until nc -zv ${i%:*} ${i#*:};do sleep 5;done
+                echo "Kafka bootstrap $i is OK now."
+                sleep 5
+              done
+        - name: wait-system-setting
+          image: busybox:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              set -ex
+              until nc -zv metersphere-system-setting 8001; do sleep 5; done
+              sleep 10
+      serviceAccountName: metersphere
+        {{ end }}
+      containers:
+        - name: metersphere-ui-test
+          image: {{.Values.common.imagePrefix}}{{.Values.uiTest.image}}:{{.Values.common.imageTag}}
+          imagePullPolicy: {{.Values.common.imagePullPolicy}}
+          resources:
+            limits:
+              memory: 800Mi
+            requests:
+              memory: 300Mi
+              cpu: 0.1
+          ports:
+            - name: http
+              containerPort: 8004
+          env: 
+            - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
+              value: "true"
+            {{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
+            - name: KAFKA_BOOTSTRAP-SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: metersphere-config
+                  key: kafka.bootstrap-servers
+            {{ end }}               
+          volumeMounts:
+            - mountPath: /opt/metersphere/conf
+              name: opt-metersphere-config
+            - mountPath: /opt/metersphere/logs
+              name: metersphere-logs
+            - mountPath: /opt/metersphere/data
+              name: metersphere-data
+      {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
+      imagePullSecrets:
+        - name: {{.Values.common.imagePullSecrets}}
+      {{ end }}
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: metersphere-config
+            items:
+            - key: metersphere.properties
+              path: metersphere.properties
+          name: opt-metersphere-config
+        - name: metersphere-logs
+          {{if .Values.logPersistence.enabled}}
+          persistentVolumeClaim:
+            claimName: metersphere-logs-pvc
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        - name: metersphere-data
+          {{if .Values.dataPersistence.enabled}}
+          persistentVolumeClaim:
+            claimName: metersphere-data-pvc
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        - name: scripts
+          configMap:
+            name: metersphere-scripts
+            defaultMode: 0755
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metersphere-ui-test
+  labels:
+    app: metersphere-ui-test
+spec:
+  sessionAffinity: ClientIP
+  selector:
+    app: metersphere-ui-test
+  ports:
+    - name: http
+      port: 8008
+      protocol: TCP
+{{end}}
