@@ -142,7 +142,7 @@ nodeController:
 
 jmeter:
   image: jmeter-master
-  imageTag: 5.5-ms2-jdk11
+  imageTag: 5.5-ms3-jdk11
 
 logPersistence:
   enabled: true
