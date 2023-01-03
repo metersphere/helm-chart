@@ -24,10 +24,7 @@ common:
 
     ## redis
     spring.session.store-type=redis
-    spring.redis.host={{.Values.redis.host}}
-    spring.redis.port={{.Values.redis.port}}
-    spring.redis.database={{.Values.redis.database}}
-    spring.redis.password={{.Values.redis.password}}
+    spring.redis.redisson.file=file:/opt/metersphere/conf/redisson.yml
 
     ## KAFKA
     kafka.partitions=1
@@ -139,6 +136,13 @@ nodeController:
   replicas: 1
   properties: |-
     ## TBD
+
+redisson:
+  yml: |-
+    singleServerConfig:
+      password: {{.Values.redis.password}}
+      address: "redis://{{.Values.redis.host}}:{{.Values.redis.port}}"
+      database: {{.Values.redis.database}}
 
 jmeter:
   image: jmeter-master
