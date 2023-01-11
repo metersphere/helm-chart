@@ -75,6 +75,8 @@ spec:
             items:
             - key: metersphere.properties
               path: metersphere.properties
+            - key: redisson.yml
+              path: redisson.yml
           name: opt-metersphere-config
         - name: metersphere-logs
           {{if .Values.logPersistence.enabled}}
