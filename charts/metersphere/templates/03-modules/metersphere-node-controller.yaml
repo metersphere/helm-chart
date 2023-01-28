@@ -36,6 +36,7 @@ spec:
               set -ex
               until nc -zv {{ .Values.kafka.host }} {{ .Values.kafka.port }}; do sleep 5; done
               sleep 10
+      serviceAccountName: metersphere
       containers:
         - name: metersphere-node-controller
           image: {{.Values.common.imagePrefix}}{{.Values.nodeController.image}}:{{.Values.common.imageTag}}
