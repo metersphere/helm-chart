@@ -2,6 +2,27 @@ apiVersion: v1
 entries:
   metersphere:
   - apiVersion: v2
+    appVersion: 2.7.0
+    created: "2023-02-23T10:27:31.092548799Z"
+    dependencies:
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.0.0
+    description: A Helm chart to deploy MeterSphere
+    digest: 6931ca64c692fa23cc0ead4768d5ac08cb92e31d39e0b7cddff30dfcd411824e
+    home: https://metersphere.io
+    icon: https://metersphere.io/images/logo/favicon.ico
+    maintainers:
+    - email: metersphere@fit2cloud.com
+      name: metersphere
+    name: metersphere
+    sources:
+    - https://github.com/metersphere/
+    urls:
+    - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.7.0/metersphere-2.7.0.tgz
+    version: 2.7.0
+  - apiVersion: v2
     appVersion: 2.6.0
     created: "2023-01-12T10:32:47.45165313Z"
     dependencies:
