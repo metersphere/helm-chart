@@ -233,14 +233,10 @@ kafka:
     create: true
   rbac:
     create: true
-  zookeeper:
-    enabled: true
-    logLevel: ERROR
-    persistence:
-      enabled: false
-    fullnameOverride: metersphere-zookeeper
   extraEnvVars:
     - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
       value: "true"
 zookeeper:
+  enabled: false
+kraft:
   enabled: true
