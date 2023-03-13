@@ -236,7 +236,7 @@ kafka:
   extraEnvVars:
     - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
       value: "true"
-zookeeper:
-  enabled: false
-kraft:
-  enabled: true
+  kraft:
+    enabled: true
+  zookeeper:
+    enabled: false
