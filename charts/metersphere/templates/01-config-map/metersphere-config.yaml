@@ -15,8 +15,6 @@ data:
   node-controller.properties: |-
     {{ tpl .Values.nodeController.properties . | nindent 4 }}
 {{end}}
-{{ if .Values.redis.enabled }}
   redisson.yml: |-
     {{ tpl .Values.redisson.yml . | nindent 4 }}
-{{end}}
   kafka.bootstrap-servers: ""
