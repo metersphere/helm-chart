@@ -14,7 +14,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v2.10.4-lts
+  imageTag: v2.10.5-lts
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
@@ -146,7 +146,7 @@ redisson:
 
 jmeter:
   image: jmeter-master
-  imageTag: 5.5-ms4-jdk17
+  imageTag: 5.5-ms6-jdk17
 
 logPersistence:
   enabled: true
