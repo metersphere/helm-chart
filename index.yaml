@@ -2,15 +2,36 @@ apiVersion: v1
 entries:
   metersphere:
   - apiVersion: v2
-    appVersion: 2.10.5-lts
-    created: "2023-08-03T09:06:19.785885863Z"
+    appVersion: 2.10.6-lts
+    created: "2023-08-28T09:54:46.530669326Z"
     dependencies:
     - condition: kafka.enabled
       name: kafka
       repository: https://charts.bitnami.com/bitnami
       version: 21.3.1
     description: A Helm chart to deploy MeterSphere
-    digest: aedd3b9fc53a5a46aba87f5c5d60411bbcb422465aef006d1c72fb04694286a9
+    digest: c41f81495420e7f79e123095f5ca786a377d2494c087725712b2a31cff68696e
+    home: https://metersphere.io
+    icon: https://metersphere.io/images/logo/favicon.ico
+    maintainers:
+    - email: metersphere@fit2cloud.com
+      name: metersphere
+    name: metersphere
+    sources:
+    - https://github.com/metersphere/
+    urls:
+    - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.10.6-lts/metersphere-2.10.6-lts.tgz
+    version: 2.10.6-lts
+  - apiVersion: v2
+    appVersion: 2.10.5-lts
+    created: "2023-08-03T09:10:03.338737936Z"
+    dependencies:
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 21.3.1
+    description: A Helm chart to deploy MeterSphere
+    digest: 1e696036b4c7cccf779773e813819cb0364f2c8e1a44a88a7f8e1ce730692714
     home: https://metersphere.io
     icon: https://metersphere.io/images/logo/favicon.ico
     maintainers:
@@ -24,14 +45,14 @@ entries:
     version: 2.10.5-lts
   - apiVersion: v2
     appVersion: 2.10.5-lts
-    created: "2023-08-03T09:10:03.338737936Z"
+    created: "2023-08-03T09:06:19.785885863Z"
     dependencies:
     - condition: kafka.enabled
       name: kafka
       repository: https://charts.bitnami.com/bitnami
       version: 21.3.1
     description: A Helm chart to deploy MeterSphere
-    digest: 1e696036b4c7cccf779773e813819cb0364f2c8e1a44a88a7f8e1ce730692714
+    digest: aedd3b9fc53a5a46aba87f5c5d60411bbcb422465aef006d1c72fb04694286a9
     home: https://metersphere.io
     icon: https://metersphere.io/images/logo/favicon.ico
     maintainers:
