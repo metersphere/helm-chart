@@ -15,4 +15,4 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   condition: kafka.enabled
   version: 22.1.6
-version: 2.10.7-lts
+version: 2.10.7
