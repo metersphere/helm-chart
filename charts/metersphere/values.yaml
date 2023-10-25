@@ -14,7 +14,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v2.10.7-lts
+  imageTag: v2.10.8-lts
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
@@ -146,7 +146,7 @@ redisson:
 
 jmeter:
   image: jmeter-master
-  imageTag: 5.5-ms6-jdk17
+  imageTag: 5.5-ms7-jdk17
 
 logPersistence:
   enabled: true
@@ -161,7 +161,7 @@ dataPersistence:
 mysql:
   enabled: true
   image: mysql
-  imageTag: "8.0.33"
+  imageTag: "8.0.34"
   host: metersphere-mysql
   port: 3306
   username: root
