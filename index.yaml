@@ -2,6 +2,27 @@ apiVersion: v1
 entries:
   metersphere:
   - apiVersion: v2
+    appVersion: 2.10.8-lts
+    created: "2023-10-26T04:42:38.708127416Z"
+    dependencies:
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 26.0.0
+    description: A Helm chart to deploy MeterSphere
+    digest: 125402d2853f188315bf853213a2f8a7ba9a60a5f66262aeaab11b458d6259d2
+    home: https://metersphere.io
+    icon: https://metersphere.io/images/logo/favicon.ico
+    maintainers:
+    - email: metersphere@fit2cloud.com
+      name: metersphere
+    name: metersphere
+    sources:
+    - https://github.com/metersphere/
+    urls:
+    - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.10.8/metersphere-2.10.8.tgz
+    version: 2.10.8
+  - apiVersion: v2
     appVersion: 2.10.7-lts
     created: "2023-10-08T10:10:31.676843415Z"
     dependencies:
@@ -22,27 +43,6 @@ entries:
     urls:
     - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.10.7/metersphere-2.10.7.tgz
     version: 2.10.7
-  - apiVersion: v2
-    appVersion: 2.10.7-lts
-    created: "2023-10-08T09:50:49.432185089Z"
-    dependencies:
-    - condition: kafka.enabled
-      name: kafka
-      repository: https://charts.bitnami.com/bitnami
-      version: 22.1.6
-    description: A Helm chart to deploy MeterSphere
-    digest: 5af2c3236982dd5b72a1feedff7aa29a4510d266a1d27bfbb81518adc91499f6
-    home: https://metersphere.io
-    icon: https://metersphere.io/images/logo/favicon.ico
-    maintainers:
-    - email: metersphere@fit2cloud.com
-      name: metersphere
-    name: metersphere
-    sources:
-    - https://github.com/metersphere/
-    urls:
-    - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.10.7-lts/metersphere-2.10.7-lts.tgz
-    version: 2.10.7-lts
   - apiVersion: v2
     appVersion: 2.10.7-lts
     created: "2023-10-08T10:01:26.731886377Z"
@@ -86,6 +86,27 @@ entries:
     - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.10.7-lts/metersphere-2.10.7-lts.tgz
     version: 2.10.7-lts
   - apiVersion: v2
+    appVersion: 2.10.7-lts
+    created: "2023-10-08T09:50:49.432185089Z"
+    dependencies:
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 22.1.6
+    description: A Helm chart to deploy MeterSphere
+    digest: 5af2c3236982dd5b72a1feedff7aa29a4510d266a1d27bfbb81518adc91499f6
+    home: https://metersphere.io
+    icon: https://metersphere.io/images/logo/favicon.ico
+    maintainers:
+    - email: metersphere@fit2cloud.com
+      name: metersphere
+    name: metersphere
+    sources:
+    - https://github.com/metersphere/
+    urls:
+    - https://github.com/metersphere/helm-chart/releases/download/metersphere-2.10.7-lts/metersphere-2.10.7-lts.tgz
+    version: 2.10.7-lts
+  - apiVersion: v2
     appVersion: 2.10.6-lts
     created: "2023-08-28T09:54:46.530669326Z"
     dependencies:
@@ -108,14 +129,14 @@ entries:
     version: 2.10.6-lts
   - apiVersion: v2
     appVersion: 2.10.5-lts
-    created: "2023-08-03T09:06:19.785885863Z"
+    created: "2023-08-03T09:10:03.338737936Z"
     dependencies:
     - condition: kafka.enabled
       name: kafka
       repository: https://charts.bitnami.com/bitnami
       version: 21.3.1
     description: A Helm chart to deploy MeterSphere
-    digest: aedd3b9fc53a5a46aba87f5c5d60411bbcb422465aef006d1c72fb04694286a9
+    digest: 1e696036b4c7cccf779773e813819cb0364f2c8e1a44a88a7f8e1ce730692714
     home: https://metersphere.io
     icon: https://metersphere.io/images/logo/favicon.ico
     maintainers:
@@ -129,14 +150,14 @@ entries:
     version: 2.10.5-lts
   - apiVersion: v2
     appVersion: 2.10.5-lts
-    created: "2023-08-03T09:10:03.338737936Z"
+    created: "2023-08-03T09:06:19.785885863Z"
     dependencies:
     - condition: kafka.enabled
       name: kafka
       repository: https://charts.bitnami.com/bitnami
       version: 21.3.1
     description: A Helm chart to deploy MeterSphere
-    digest: 1e696036b4c7cccf779773e813819cb0364f2c8e1a44a88a7f8e1ce730692714
+    digest: aedd3b9fc53a5a46aba87f5c5d60411bbcb422465aef006d1c72fb04694286a9
     home: https://metersphere.io
     icon: https://metersphere.io/images/logo/favicon.ico
     maintainers:
