@@ -43,7 +43,7 @@ spec:
               sleep 10
         {{if and .Values.kafka.enabled .Values.kafka.externalAccess.enabled }}
         - name: get-kafka-external
-          image: docker.io/bitnami/kubectl:1.28.2-debian-11-r16
+          image: docker.io/bitnami/kubectl:1.25.10-debian-11-r6
           command:
             - /scripts/get-kafka-external.sh
           volumeMounts:
