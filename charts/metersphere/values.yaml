@@ -14,7 +14,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v2.10.8-lts
+  imageTag: v2.10.9-lts
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
