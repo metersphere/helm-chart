@@ -14,7 +14,7 @@ common:
   imagePrefix: "registry.cn-qingdao.aliyuncs.com/metersphere/"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v2.10.9-lts
+  imageTag: v2.10.10-lts
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
@@ -146,7 +146,7 @@ redisson:
 
 jmeter:
   image: jmeter-master
-  imageTag: 5.5-ms7-jdk17
+  imageTag: 5.5-ms8-jdk17
 
 logPersistence:
   enabled: true
@@ -161,7 +161,7 @@ dataPersistence:
 mysql:
   enabled: true
   image: mysql
-  imageTag: "8.0.34"
+  imageTag: "8.0.35"
   host: metersphere-mysql
   port: 3306
   username: root
@@ -173,7 +173,7 @@ mysql:
 minio:
   enabled: true
   image: minio
-  imageTag: "RELEASE.2023-04-13T03-08-07Z"
+  imageTag: "RELEASE.2023-11-06T22-26-08Z"
   username: admin
   password: Password123@minio
   host: metersphere-minio
