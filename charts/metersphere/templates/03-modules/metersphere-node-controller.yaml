@@ -29,13 +29,22 @@ spec:
         - name: wait-kafka
           image: busybox:latest
           imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: metersphere-config
+                  key: kafka.bootstrap-servers
           command:
             - sh
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.kafka.host }} {{ .Values.kafka.port }}; do sleep 5; done
-              sleep 10
+              for i in ${KAFKA_BOOTSTRAP_SERVERS//,/ };do
+                until nc -zv ${i%:*} ${i#*:};do sleep 5;done
+                echo "Kafka bootstrap $i is OK now."
+                sleep 5
+              done
       containers:
         - name: metersphere-node-controller
           image: {{.Values.common.imagePrefix}}{{.Values.nodeController.image}}:{{.Values.common.imageTag}}
