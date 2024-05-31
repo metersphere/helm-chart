@@ -9,7 +9,7 @@ maintainers:
   name: metersphere
 name: metersphere
 sources:
-- https://github.com/metersphere/metersphere
+- https://github.com/metersphere/
 dependencies:
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
