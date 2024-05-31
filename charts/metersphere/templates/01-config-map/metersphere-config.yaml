@@ -3,18 +3,8 @@ kind: ConfigMap
 metadata:
   name: metersphere-config
 data:
-{{if .Values.systemSetting.enabled | default true }}
   metersphere.properties: |-
     {{ tpl .Values.common.properties . | nindent 4 }}
-{{end}}
-{{if .Values.dataStreaming.enabled | default true }}
-  data-streaming.properties: |-
-    {{ tpl .Values.dataStreaming.properties . | nindent 4 }}
-{{end}}
-{{if .Values.nodeController.enabled | default true }}
-  node-controller.properties: |-
-    {{ tpl .Values.nodeController.properties . | nindent 4 }}
-{{end}}
   redisson.yml: |-
     {{ tpl .Values.redisson.yml . | nindent 4 }}
   kafka.bootstrap-servers: ""

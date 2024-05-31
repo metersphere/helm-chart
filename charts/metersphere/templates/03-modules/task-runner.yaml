@@ -1,22 +1,17 @@
-{{if .Values.gateway.enabled }}
+{{if .Values.nodeController.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metersphere-gateway
+  name: task-runner
 spec:
-  replicas: {{.Values.gateway.replicas | default 1}}
+  replicas: {{.Values.nodeController.replicas | default 1}}
   selector:
     matchLabels:
-      app: metersphere-gateway
-  strategy:
-    rollingUpdate:
-      maxSurge: 100%
-      maxUnavailable: 100%
-    type: RollingUpdate
+      app: task-runner
   template:
     metadata:
       labels:
-        app: metersphere-gateway
+        app: task-runner
     spec:
       affinity:
         podAntiAffinity:
@@ -28,22 +23,31 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - metersphere-gateway
+                  - task-runner
               topologyKey: kubernetes.io/hostname
       initContainers:
-        - name: wait-mysql
+        - name: wait-kafka
           image: busybox:latest
           imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: metersphere-config
+                  key: kafka.bootstrap-servers
           command:
             - sh
             - -c
             - |
               set -ex
-              until nc -zv {{ .Values.mysql.host }} {{ .Values.mysql.port }}; do sleep 5; done
-              sleep 10
+              for i in ${KAFKA_BOOTSTRAP_SERVERS//,/ };do
+                until nc -zv ${i%:*} ${i#*:};do sleep 5;done
+                echo "Kafka bootstrap $i is OK now."
+                sleep 5
+              done
       containers:
-        - name: metersphere-gateway
-          image: {{.Values.common.imagePrefix}}{{.Values.gateway.image}}:{{.Values.common.imageTag}}
+        - name: task-runner
+          image: {{.Values.common.imagePrefix}}{{.Values.nodeController.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
@@ -53,8 +57,8 @@ spec:
               cpu: 0.1
           ports:
             - name: http
-              containerPort: 8000
-          env: 
+              containerPort: 8082
+          env:
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
           volumeMounts:
@@ -63,21 +67,12 @@ spec:
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
             - mountPath: /opt/metersphere/data
-              name: metersphere-data
+              name: task-runner-data
       {{if ne (.Values.common.imagePullSecrets | default "nil") "nil"}}
       imagePullSecrets:
         - name: {{.Values.common.imagePullSecrets}}
       {{ end }}
       volumes:
-        - configMap:
-            defaultMode: 420
-            name: metersphere-config
-            items:
-            - key: metersphere.properties
-              path: metersphere.properties
-            - key: redisson.yml
-              path: redisson.yml
-          name: opt-metersphere-config
         - name: metersphere-logs
           {{if .Values.logPersistence.enabled}}
           persistentVolumeClaim:
@@ -85,30 +80,26 @@ spec:
           {{ else }}
           emptyDir: {}
           {{ end }}
-        - name: metersphere-data
+        - name: task-runner-data
           {{if .Values.dataPersistence.enabled}}
           persistentVolumeClaim:
-            claimName: metersphere-data-pvc
+            claimName: task-runner-data-pvc
           {{ else }}
           emptyDir: {}
           {{ end }}
-        - name: scripts
-          configMap:
-            name: metersphere-scripts
-            defaultMode: 0755
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: metersphere-gateway
+  name: task-runner
   labels:
-    app: metersphere-gateway
+    app: task-runner
 spec:
   sessionAffinity: ClientIP
   selector:
-    app: metersphere-gateway
+    app: task-runner
   ports:
     - name: http
-      port: 8000
+      port: 8082
       protocol: TCP
 {{end}}
