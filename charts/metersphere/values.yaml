@@ -15,7 +15,7 @@ common:
   image: "metersphere-ce"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v3.0.0-beta
+  imageTag: v3.3.0
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
@@ -46,7 +46,15 @@ redisson:
       address: "redis://{{.Values.redis.host}}:{{.Values.redis.port}}"
       database: {{.Values.redis.database}}
 
+metersphere:
+  enabled: true
+  replicas: 1
+
 resultHub:
+  enabled: true
+  replicas: 1
+
+taskRunner:
   enabled: true
   replicas: 1
 
@@ -63,7 +71,7 @@ dataPersistence:
 mysql:
   enabled: true
   image: mysql
-  imageTag: "8.0.35"
+  imageTag: "8.0.38"
   host: metersphere-mysql
   port: 3306
   username: root
@@ -75,7 +83,7 @@ mysql:
 minio:
   enabled: true
   image: minio
-  imageTag: "RELEASE.2023-11-06T22-26-08Z"
+  imageTag: "RELEASE.2024-05-07T06-41-25Z"
   username: admin
   password: Password123@minio
   host: metersphere-minio
@@ -87,7 +95,7 @@ minio:
 redis:
   enabled: true
   image: redis
-  imageTag: "6.2.6"
+  imageTag: "7.2.5-alpine"
   password: Password123@redis
   host: metersphere-redis
   port: 6379
@@ -98,8 +106,8 @@ redis:
     size: 10Gi
 kafka:
   enabled: true
-  fullnameOverride: metersphere-kafka
-  host: metersphere-kafka
+  fullnameOverride: kafka
+  host: kafka
   port: 9092
   metricTopic: JMETER_METRICS
   logTopic: JMETER_LOGS

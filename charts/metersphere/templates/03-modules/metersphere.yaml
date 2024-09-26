@@ -1,10 +1,10 @@
-{{if .Values.apiTest.enabled }}
+{{if .Values.metersphere.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metersphere
 spec:
-  replicas: {{.Values.apiTest.replicas | default 1}}
+  replicas: {{.Values.metersphere.replicas | default 1}}
   selector:
     matchLabels:
       app: metersphere
@@ -69,21 +69,11 @@ spec:
                 echo "Kafka bootstrap $i is OK now."
                 sleep 5
               done
-        - name: wait-system-setting
-          image: busybox:latest
-          imagePullPolicy: IfNotPresent
-          command:
-            - sh
-            - -c
-            - |
-              set -ex
-              until nc -zv metersphere-system-setting 8001; do sleep 5; done
-              sleep 10
       serviceAccountName: metersphere
         {{ end }}
       containers:
         - name: metersphere
-          image: {{.Values.common.imagePrefix}}{{.Values.apiTest.image}}:{{.Values.common.imageTag}}
+          image: {{.Values.common.imagePrefix}}{{.Values.common.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
@@ -93,7 +83,7 @@ spec:
               cpu: 0.1
           ports:
             - name: http
-              containerPort: 8004
+              containerPort: 8081
           env:
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
@@ -104,6 +94,11 @@ spec:
                   name: metersphere-config
                   key: kafka.bootstrap-servers
             {{ end }}
+          command:
+            - sh
+            - -c
+            - |
+              sh /shells/metersphere.sh
           volumeMounts:
             - mountPath: /opt/metersphere/conf
               name: opt-metersphere-config
@@ -156,6 +151,6 @@ spec:
     app: metersphere
   ports:
     - name: http
-      port: 8004
+      port: 8081
       protocol: TCP
 {{end}}

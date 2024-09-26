@@ -10,7 +10,7 @@ spec:
     requests:
       storage: {{.Values.dataPersistence.size}}
   storageClassName: {{.Values.common.storageClass}}
-{{if .Values.nodeController.enabled }}
+{{if .Values.taskRunner.enabled }}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1

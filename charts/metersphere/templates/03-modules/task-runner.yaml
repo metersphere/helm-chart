@@ -1,10 +1,10 @@
-{{if .Values.nodeController.enabled }}
+{{if .Values.taskRunner.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: task-runner
 spec:
-  replicas: {{.Values.nodeController.replicas | default 1}}
+  replicas: {{.Values.taskRunner.replicas | default 1}}
   selector:
     matchLabels:
       app: task-runner
@@ -47,7 +47,7 @@ spec:
               done
       containers:
         - name: task-runner
-          image: {{.Values.common.imagePrefix}}{{.Values.nodeController.image}}:{{.Values.common.imageTag}}
+          image: {{.Values.common.imagePrefix}}{{.Values.common.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
@@ -57,13 +57,16 @@ spec:
               cpu: 0.1
           ports:
             - name: http
-              containerPort: 8082
+              containerPort: 8000
           env:
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
+          command:
+            - sh
+            - -c
+            - |
+              sh /shells/task-runner.sh
           volumeMounts:
-            - mountPath: /opt/metersphere/conf
-              name: opt-metersphere-config
             - mountPath: /opt/metersphere/logs
               name: metersphere-logs
             - mountPath: /opt/metersphere/data
@@ -100,6 +103,6 @@ spec:
     app: task-runner
   ports:
     - name: http
-      port: 8082
+      port: 8000
       protocol: TCP
 {{end}}

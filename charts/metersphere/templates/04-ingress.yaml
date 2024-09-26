@@ -16,9 +16,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: metersphere-gateway
+                name: metersphere
                 port:
-                  number: 8000
+                  number: 8081
 {{if .Values.ingress.https.enabled}}
   tls:
     - hosts:

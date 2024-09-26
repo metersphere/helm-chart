@@ -57,7 +57,7 @@ spec:
               done
       containers:
         - name: result-hub
-          image: {{.Values.common.imagePrefix}}{{.Values.dataStreaming.image}}:{{.Values.common.imageTag}}
+          image: {{.Values.common.imagePrefix}}{{.Values.common.image}}:{{.Values.common.imageTag}}
           imagePullPolicy: {{.Values.common.imagePullPolicy}}
           resources:
             limits:
@@ -71,6 +71,11 @@ spec:
           env:
             - name: FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS
               value: "true"
+          command:
+            - sh
+            - -c
+            - |
+              sh /shells/result-hub.sh
           volumeMounts:
             - mountPath: /opt/metersphere/conf
               name: opt-metersphere-config
@@ -85,8 +90,10 @@ spec:
             defaultMode: 420
             name: metersphere-config
             items:
-            - key: common.properties
+            - key: metersphere.properties
               path: metersphere.properties
+            - key: redisson.yml
+              path: redisson.yml
           name: opt-metersphere-config
         - name: metersphere-logs
           {{if .Values.logPersistence.enabled}}
@@ -95,19 +102,5 @@ spec:
           {{ else }}
           emptyDir: {}
           {{ end }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: result-hub
-  labels:
-    app: result-hub
-spec:
-  sessionAffinity: ClientIP
-  selector:
-    app: result-hub
-  ports:
-    - name: http
-      port: 8084
-      protocol: TCP
+
 {{end}}
