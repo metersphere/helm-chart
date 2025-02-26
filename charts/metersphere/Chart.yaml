@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 3.6.1-lts
+appVersion: 3.6.2-lts
 description: A Helm chart to deploy MeterSphere
 engine: gotpl
 home: https://metersphere.io
@@ -15,4 +15,4 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   condition: kafka.enabled
   version: 26.0.0
-version: 3.6.1
+version: 3.6.2
