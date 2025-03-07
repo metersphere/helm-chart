@@ -13,6 +13,9 @@ spec:
       labels:
         app: result-hub
     spec:
+      securityContext:
+        runAsUser: 0 # 以超级管理员的方式执行，防止出现 Suppressed: java.io.FileNotFoundException: /opt/metersphere/logs/metersphere/warn.log
+        fsGroup: 0 # 以超级管理员的方式执行，防止出现 Suppressed: java.io.FileNotFoundException: /opt/metersphere/logs/metersphere/warn.log    
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
