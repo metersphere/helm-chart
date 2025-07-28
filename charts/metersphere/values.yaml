@@ -15,7 +15,7 @@ common:
   image: "metersphere-ce"
   imagePullSecrets: nil
   storageClass: default
-  imageTag: v3.6.2-lts
+  imageTag: v3.6.5-lts
   imagePullPolicy: Always
   properties: |-
     ## DATABASE
